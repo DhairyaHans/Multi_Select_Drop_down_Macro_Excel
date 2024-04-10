@@ -1,6 +1,4 @@
 Private Sub Worksheet_Change(ByVal Target As Range)
-    Static previousValues As Object
-    
     Dim sourceColumn As Range
     Dim targetColumn As Range
     Dim changedCells As Range
@@ -13,17 +11,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     Dim nV As Variant
     Dim oV As Variant
     
-    
-    ' Initialize the dictionary if it's not already initialized
-    If previousValues Is Nothing Then
-        Set previousValues = CreateObject("Scripting.Dictionary")
-    End If
-    
     ' Define the range for the source column containing comma-separated values
     Set sourceColumn = Sheet12.Range("F1:F" & Sheet12.Cells(Sheet12.Rows.Count, "F").End(xlUp).Row)
     
     ' Define the range for the target column where drop-down lists will be created
     Set targetColumn = Sheet12.Range("G1:G" & sourceColumn.Rows.Count)
+    
+    ' Code for Handling the updates in comma-separated Values for drop-down list
     
     ' Check if the changed cells are in the source column
     Set changedCells = Application.Intersect(Target, sourceColumn)
@@ -53,11 +47,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
                 .Validation.InCellDropdown = True
             End With
             
-            ' Store the previous value of the cell
-            previousValues(cell.Address) = cell.value
         Next cell
     End If
     
+    ' Code for handling the Multi-Select Drop Down
     
     ' Check if the changed cells are in the target column
     Set changedCells = Application.Intersect(Target, targetColumn)
@@ -76,10 +69,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             Sheet12.Range("E2").value = cell.Row - targetColumn.Row + 1
             Sheet12.Range("E3").value = oldValue
             
-            
-            
+            ' Display the Message Box
             MsgBox "Previous Value: " & oldValue & vbNewLine & "New Value: " & newValue
             
+            ' Logic handling the Drop-down Values
             If oldValue = "" Then
                 Target.value = newValue
             Else
@@ -93,7 +86,6 @@ Private Sub Worksheet_Change(ByVal Target As Range)
                     End If
                 End If
             End If
-
             
             Application.EnableEvents = True
             
