@@ -1,0 +1,42 @@
+Sub UpdateDropDownLists()
+    Dim sourceColumn As Range
+    Dim targetColumn As Range
+    Dim cell As Range
+    Dim values() As String
+    Dim validationList As String
+    Dim i As Integer
+    
+    ' Define the range for the source column containing comma-separated values
+    Set sourceColumn = Sheet12.Range("F1:F" & Sheet12.Cells(Sheet12.Rows.Count, "F").End(xlUp).Row)
+    
+    ' Define the range for the target column where drop-down lists will be created
+    Set targetColumn = Sheet12.Range("G1:G" & sourceColumn.Rows.Count)
+    
+    ' Loop through each cell in the source column
+    For Each cell In sourceColumn
+        ' Get the comma-separated values from the current cell
+        If cell.value <> "" Then
+            values = SplitValuesToList(cell.value)
+            
+            ' Generate the validation list string
+            validationList = ""
+            For i = LBound(values) To UBound(values)
+                validationList = validationList & values(i) & ","
+            Next i
+            validationList = Left(validationList, Len(validationList) - 1) ' Remove the trailing comma
+            
+            ' Set up data validation for the corresponding cell in the target column
+            With targetColumn.Cells(cell.Row - sourceColumn.Row + 1).Validation
+                .Delete
+                .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=validationList
+                .IgnoreBlank = True
+                .InCellDropdown = True
+            End With
+        End If
+    Next cell
+    Application.EnableEvents = True
+    
+End Sub
+
+
+
