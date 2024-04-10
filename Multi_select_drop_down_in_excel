@@ -1,0 +1,103 @@
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Static previousValues As Object
+    
+    Dim sourceColumn As Range
+    Dim targetColumn As Range
+    Dim changedCells As Range
+    Dim cell As Range
+    Dim values() As String
+    Dim validationList As String
+    Dim i As Integer
+    Dim oldValue As String
+    Dim newValue As String
+    Dim nV As Variant
+    Dim oV As Variant
+    
+    
+    ' Initialize the dictionary if it's not already initialized
+    If previousValues Is Nothing Then
+        Set previousValues = CreateObject("Scripting.Dictionary")
+    End If
+    
+    ' Define the range for the source column containing comma-separated values
+    Set sourceColumn = Sheet12.Range("F1:F" & Sheet12.Cells(Sheet12.Rows.Count, "F").End(xlUp).Row)
+    
+    ' Define the range for the target column where drop-down lists will be created
+    Set targetColumn = Sheet12.Range("G1:G" & sourceColumn.Rows.Count)
+    
+    ' Check if the changed cells are in the source column
+    Set changedCells = Application.Intersect(Target, sourceColumn)
+    
+    If Not changedCells Is Nothing Then
+        ' Loop through each changed cell in the source column
+        For Each cell In changedCells
+            Sheet12.Range("D1").value = cell.value
+            Sheet12.Range("D2").value = cell.Row - sourceColumn.Row + 1
+            Sheet12.Range("D3").value = Target.value
+            ' Get the comma-separated values from the changed cell
+            
+            values = SplitValuesToList(cell.value)
+            
+            ' Generate the validation list string
+            validationList = ""
+            For i = LBound(values) To UBound(values)
+                validationList = validationList & values(i) & ","
+            Next i
+            validationList = Left(validationList, Len(validationList) - 1) ' Remove the trailing comma
+            
+            ' Set up data validation for the corresponding cell in the target column
+            With targetColumn.Cells(cell.Row - sourceColumn.Row + 1)
+                .Validation.Delete
+                .Validation.Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=validationList
+                .Validation.IgnoreBlank = True
+                .Validation.InCellDropdown = True
+            End With
+            
+            ' Store the previous value of the cell
+            previousValues(cell.Address) = cell.value
+        Next cell
+    End If
+    
+    
+    ' Check if the changed cells are in the target column
+    Set changedCells = Application.Intersect(Target, targetColumn)
+    
+    If Not changedCells Is Nothing Then
+        ' Loop through each changed cell in the target column
+        For Each cell In changedCells
+            Application.EnableEvents = False
+            ' Get the previous value of the cell from the dictionary
+            newValue = cell.value
+            Application.Undo
+            oldValue = cell.value
+            
+            ' oldValue = previousValues(cell.Address)
+            Sheet12.Range("E1").value = newValue
+            Sheet12.Range("E2").value = cell.Row - targetColumn.Row + 1
+            Sheet12.Range("E3").value = oldValue
+            
+            
+            
+            MsgBox "Previous Value: " & oldValue & vbNewLine & "New Value: " & newValue
+            
+            If oldValue = "" Then
+                Target.value = newValue
+            Else
+                If newValue = "Clear" Then
+                    Target.value = ""
+                Else
+                    If InStr(1, oldValue, newValue) = 0 Then
+                        Target.value = oldValue & ", " & newValue
+                    Else
+                        Target.value = oldValue
+                    End If
+                End If
+            End If
+
+            
+            Application.EnableEvents = True
+            
+        Next cell
+    End If
+End Sub
+
