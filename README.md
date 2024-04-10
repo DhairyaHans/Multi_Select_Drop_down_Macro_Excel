@@ -34,19 +34,19 @@
     X,Y,Z          (Drop down list having values -> X, Y, Z, and Clear as list options to select from)
     P,Q,R,S        P, Q  (Assuming P and Q are selected)
 
-  Steps ->
-      Step 1: Press Alt + F11 to open the VBA Editor.
-      Step 2: Go to Insert > Module to insert a new module.
-      Step 3: Copy and paste the code of the "**split_values_to_list**" file into the module window.
-      Step 4: Go to Insert > Module to insert a new module.
-      Step 5: Copy and paste the code of the "**update_drop_down_lists**" file into the module window.
-      Step 6: In the Project Explorer window, find your worksheet name under "Microsoft Excel Objects" (e.g., "Sheet12 (Hello World)").
-      Step 7: Double-click on the worksheet name to open the code window for that worksheet.
-      Step 8: Under the (General) tab, select "Worksheet" and under the (Declarations) tab, select "Change".
-      Step 9: Copy and paste the code of the "**Multi_select_drop_down_in_excel**" file, into the window.
-      Step 10: Run the Macro, update_drop_down_lists ("UpdateDropDownLists"), by pressing Alt + F8 and selecting the macro.
-      Step 11: Now, you can use the functionality of multi-select drop down on column A (Working as Source) and Column B (Working as Target)
-
+    Steps ->
+        Step 1: Press Alt + F11 to open the VBA Editor.
+        Step 2: Go to Insert > Module to insert a new module.
+        Step 3: Copy and paste the code of the "**split_values_to_list**" file into the module window.
+        Step 4: Go to Insert > Module to insert a new module.
+        Step 5: Copy and paste the code of the "**update_drop_down_lists**" file into the module window.
+        Step 6: In the Project Explorer window, find your worksheet name under "Microsoft Excel Objects" (e.g., "Sheet12 (Hello World)").
+        Step 7: Double-click on the worksheet name to open the code window for that worksheet.
+        Step 8: Under the (General) tab, select "Worksheet" and under the (Declarations) tab, select "Change".
+        Step 9: Copy and paste the code of the "**Multi_select_drop_down_in_excel**" file, into the window.
+        Step 10: Run the Macro, update_drop_down_lists ("UpdateDropDownLists"), by pressing Alt + F8 and selecting the macro.
+        Step 11: Now, you can use the functionality of multi-select drop down on column A (Working as Source) and Column B (Working as Target)
+  
 # IMPORTANT POINTS ->
   - In the code, I have used column 'F' as my Source and column 'G' as my Target Column.
   - Also, Do update the Sheet name, based on your sheet, I have used "Sheet12".
